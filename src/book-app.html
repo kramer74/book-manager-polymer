@@ -13,6 +13,11 @@
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 
+<link rel="lazy-import" href="book-search.html">
+<link rel="lazy-import" href="book-favorite.html">
+<link rel="lazy-import" href="book-bookmark.html">
+<link rel="lazy-import" href="book-archive.html">
+<link rel="lazy-import" href="book-view404.html">
 
 <dom-module id="book-app">
     <template>
@@ -41,7 +46,25 @@
                 height: calc(100% - 80px);
                 overflow: auto;
             }
+            a:link {
+                text-decoration: none;
+                color:#000000;
+            }
 
+            a:visited {
+                text-decoration: none;
+                color:#000000;
+            }
+
+            a:hover {
+                text-decoration: none;
+                color:#000000;
+            }
+
+            a:active {
+                text-decoration: none;
+                color:#000000;
+            }
         </style>
         <app-location route="{{route}}"></app-location>
         <app-route
@@ -61,35 +84,41 @@
 
             <app-drawer-layout id="drawerLayout">
                 <app-drawer id="drawer" slot="drawer">
+                    <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
                     <div class="custom-drawer-content">
+                        <a name="search" href="search">
                         <paper-icon-item>
-                            <iron-icon icon="search" slot="item-icon"></iron-icon> <span>Suche</span>
-                        </paper-icon-item>
+                            <iron-icon icon="search" slot="item-icon"></iron-icon><span>Suche</span>
+                        </paper-icon-item></a>
+                        <a name="search" href="favorite">
                         <paper-icon-item>
                             <iron-icon icon="favorite" slot="item-icon"></iron-icon> <span>Favoriten</span>
-                        </paper-icon-item>
+                        </paper-icon-item></a>
+                        <a name="search" href="bookmark">
                         <paper-icon-item>
                             <iron-icon icon="bookmark" slot="item-icon"></iron-icon> <span>Merkliste</span>
-                        </paper-icon-item>
+                        </paper-icon-item></a>
+                        <a name="search" href="archive">
                         <paper-icon-item>
                             <iron-icon icon="archive" slot="item-icon"></iron-icon> <span>Archive</span>
-                        </paper-icon-item>
+                        </paper-icon-item></a>
                     </div>
+                    </iron-selector>
                 </app-drawer>
 
-                <sample-content size="100"></sample-content>
-
+                <iron-pages
+                        selected="[[page]]"
+                        attr-for-selected="name"
+                        fallback-selection="view404"
+                        role="main">
+                    <book-search name="search"></book-search>
+                    <book-favorite name="favorite"></book-favorite>
+                    <book-bookmark name="bookmark"></book-bookmark>
+                    <book-archive name="archive"></book-archive>
+                    <book-view404 name="view404"></book-view404>
+                </iron-pages>
             </app-drawer-layout>
-            <iron-pages
-                    selected="[[page]]"
-                    attr-for-selected="name"
-                    fallback-selection="view404"
-                    role="main">
-                <my-view1 name="view1"></my-view1>
-                <my-view2 name="view2"></my-view2>
-                <my-view3 name="view3"></my-view3>
-                <my-view404 name="view404"></my-view404>
-            </iron-pages>
+
         </app-header-layout>
     </template>
 
@@ -139,7 +168,7 @@
 
                 // If no page was found in the route data, page will be an empty string.
                 // Deault to 'view1' in that case.
-                this.page = page || 'view1';
+                this.page = page || 'search';
 
                 // Close a non-persistent drawer when the page & route are changed.
                 if (!this.$.drawer.persistent) {
