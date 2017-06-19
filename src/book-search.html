@@ -18,40 +18,34 @@
             <div class="circle">S</div>
             <h1>Suche</h1>
             <input value="{{searchTerm::input}}">
-            <p>{{page}}</p>
+            <p>[[page]]</p>
             <dom-bind>
-                <template>
-
-                    <iron-ajax
-                            auto
-                            id="requestBooks"
-                            url="http://localhost:8080/de.oc.bookmonkey.rest.app/api/books"
-                            params='{"type":"all"}'
-                            handle-as="json"
-                            last-response="{{books}}">
-                    </iron-ajax>
-                    <paper-datatable-api id="dataTable" data="[[books]]"
-
-                                         paginate
-                                         totalElements="30"
-                                         totalPages="5">
-                        <paper-datatable-api-column draggable-column header="Titel" property="title" sortable sortDirection="asc">
-                            <template>
-                                <span>[[value]]</span>
-                            </template>
-                        </paper-datatable-api-column>
-                        <paper-datatable-api-column header="Subtitle" property="subtitle">
-                            <template>
-                                <span>[[value]]</span>
-                            </template>
-                        </paper-datatable-api-column>
-                    </paper-datatable-api>
-                </template>
+                <iron-ajax
+                        auto
+                        id="requestBooks"
+                        url="http://localhost:9080/de.oc.bookmonkey.rest.app/api/books"
+                        params='{"type":"all"}'
+                        handle-as="json"
+                        last-response="{{books}}">
+                </iron-ajax>
+                <paper-datatable-api id="dataTable" data="[[books]]"
+                                     paginate
+                                     totalElements="30"
+                                     totalPages="5">
+                    <paper-datatable-api-column draggable-column header="Titel" property="title" sortable sortDirection="asc">
+                        <template>
+                            <span>[[value]]</span>
+                        </template>
+                    </paper-datatable-api-column>
+                    <paper-datatable-api-column header="Subtitle" property="subtitle">
+                        <template>
+                            <span>[[value]]</span>
+                        </template>
+                    </paper-datatable-api-column>
+                </paper-datatable-api>
             </dom-bind>
-
         </div>
     </template>
-
     <script>
         class BookSearch extends Polymer.Element {
             static get is() { return 'book-search'; }
@@ -70,6 +64,10 @@
                         type: String,
                         notify: true
                     },
+                    page: {
+                        type: String,
+                        observer: "_pageChanged"
+                    }
                 };
             }
 
@@ -92,16 +90,22 @@
             connectedCallback() {
                 super.connectedCallback();
                 this.addEventListener('sort-th-content', this.handleSort.bind(this));
-        /*this.addEventListener('handleSort-test', this.handleSort.bind(this));*/
             }
 
             handleSort(event) {
                 console.log("Owwh", event);
-                this.sortProperty = event.detail.property + ',' + event.detail.sortDirection ;
+                this.sortProperty = event.detail.column.property + ',' + event.detail.column.sortDirection ; ;
+                console.log(this.sortProperty);
             }
 
-
+            _pageChanged(page) {
+                console.log("page", page);
+                if ('search' === page) {
+                    this.$.requestBooks.generateRequest();
+                }
+            }
         }
         window.customElements.define(BookSearch.is, BookSearch);
+
     </script>
 </dom-module>

@@ -111,7 +111,7 @@
                         attr-for-selected="name"
                         fallback-selection="view404"
                         role="main">
-                    <book-search name="search"></book-search>
+                    <book-search name="search" page="[[page]]"></book-search>
                     <book-favorite name="favorite"></book-favorite>
                     <book-bookmark name="bookmark"></book-bookmark>
                     <book-archive name="archive"></book-archive>
@@ -137,13 +137,13 @@
                     },
                     rootPattern: String,
                     routeData: Object,
-                    subroute: String,
+                    subroute: String
                 };
             }
 
             static get observers() {
                 return [
-                    '_routePageChanged(routeData.page)',
+                    '_routePageChanged(routeData.page)'
                 ];
             }
 
@@ -157,12 +157,11 @@
 
             ready() {
                 super.ready();
-                //this.$.toggle.addEventListener('click', e => {this._handleClick(e)});
             }
 
             connectedCallback() {
                 super.connectedCallback();
-                this.$.toggle.addEventListener('click', e => {this._handleClick(e)});
+                this.$.toggle.addEventListener('click', this._handleClick.bind(this));
             }
 
             _routePageChanged(page) {
@@ -198,7 +197,6 @@
                     null,
                     this._showPage404.bind(this),
                     true);
-                this.fire()
             }
 
             _showPage404() {
