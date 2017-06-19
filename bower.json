@@ -26,6 +26,7 @@
     "iron-ajax": "PolymerElements/iron-ajax#^2.0.2",
     "paper-datatable-api": "^2.0.1",
     "paper-input": "^2.0.1",
-    "paper-button": "^2.0.0"
+    "paper-button": "^2.0.0",
+    "Sortable": "sortable.js#^1.6.0"
   }
 }
