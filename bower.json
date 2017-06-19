@@ -3,7 +3,7 @@
   "authors": [
     "kkr <klaus.kramer@opitz-consulting.de>"
   ],
-  "description": "Eine OMDB Anwendung zur Verwaltung einer eignen Bücherkollektion",
+  "description": "Eine OMDB Anwendung zur Verwaltung einer eigenen Bücherkollektion",
   "main": "index.html",
   "license": "MIT",
   "homepage": "",
@@ -22,6 +22,8 @@
     "paper-item": "PolymerElements/paper-item#^2.0.0",
     "iron-icons": "PolymerElements/iron-icons#^2.0.1",
     "app-route": "PolymerElements/app-route#^2.0.0",
-    "iron-pages": "PolymerElements/iron-pages#^2.0.0"
+    "iron-pages": "PolymerElements/iron-pages#^2.0.0",
+    "iron-ajax": "PolymerElements/iron-ajax#^2.0.2",
+    "paper-datatable-api": "^2.0.1"
   }
 }

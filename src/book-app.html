@@ -133,6 +133,7 @@
                         type: String,
                         reflectToAttribute: true,
                         observer: '_pageChanged',
+                        notify: true
                     },
                     rootPattern: String,
                     routeData: Object,
@@ -156,6 +157,11 @@
 
             ready() {
                 super.ready();
+                //this.$.toggle.addEventListener('click', e => {this._handleClick(e)});
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
                 this.$.toggle.addEventListener('click', e => {this._handleClick(e)});
             }
 
@@ -192,13 +198,12 @@
                     null,
                     this._showPage404.bind(this),
                     true);
+                this.fire()
             }
 
             _showPage404() {
                 this.page = 'view404';
             }
-
-
         }
 
         window.customElements.define(BookApp.is, BookApp);

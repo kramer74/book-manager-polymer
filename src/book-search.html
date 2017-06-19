@@ -1,4 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-datatable-api/paper-datatable-api-column.html">
+<link rel="import" href="../bower_components/paper-datatable-api/paper-datatable-api.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="book-search">
@@ -14,16 +17,91 @@
         <div class="card">
             <div class="circle">S</div>
             <h1>Suche</h1>
-            <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
-            <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+            <input value="{{searchTerm::input}}">
+            <p>{{page}}</p>
+            <dom-bind>
+                <template>
+
+                    <iron-ajax
+                            auto
+                            id="requestBooks"
+                            url="http://localhost:8080/de.oc.bookmonkey.rest.app/api/books"
+                            params='{"type":"all"}'
+                            handle-as="json"
+                            last-response="{{books}}">
+                    </iron-ajax>
+                    <paper-datatable-api id="dataTable" data="[[books]]"
+
+                                         paginate
+                                         totalElements="30"
+                                         totalPages="5">
+                        <paper-datatable-api-column draggable-column header="Titel" property="title" sortable sortDirection="asc">
+                            <template>
+                                <span>[[value]]</span>
+                            </template>
+                        </paper-datatable-api-column>
+                        <paper-datatable-api-column header="Subtitle" property="subtitle">
+                            <template>
+                                <span>[[value]]</span>
+                            </template>
+                        </paper-datatable-api-column>
+                    </paper-datatable-api>
+                </template>
+            </dom-bind>
+
         </div>
     </template>
 
     <script>
         class BookSearch extends Polymer.Element {
             static get is() { return 'book-search'; }
-        }
 
+            static get properties() {
+                return {
+                    books: {
+                        type: Array,
+                        notify: true
+                    },
+                    searchTerm: {
+                      type: String,
+                      value: ''
+                    },
+                    sortProperty: {
+                        type: String,
+                        notify: true
+                    },
+                };
+            }
+
+            static get observedAttributes() { return ["books"]; }
+
+            constructor() {
+                super();
+                console.log(BookSearch.properties.books);
+            }
+
+            ready() {
+                super.ready(); // for 2.0 class-based elements only
+            }
+
+            attributeChangedCallback(name, oldValue, newValue) {
+                super.attributeChangedCallback(name, oldValue, newValue);
+                console.log(name);
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+                this.addEventListener('sort-th-content', this.handleSort.bind(this));
+        /*this.addEventListener('handleSort-test', this.handleSort.bind(this));*/
+            }
+
+            handleSort(event) {
+                console.log("Owwh", event);
+                this.sortProperty = event.detail.property + ',' + event.detail.sortDirection ;
+            }
+
+
+        }
         window.customElements.define(BookSearch.is, BookSearch);
     </script>
 </dom-module>
