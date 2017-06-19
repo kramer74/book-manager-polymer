@@ -1,0 +1,53 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="shared-styles.html">
+<dom-module id="book-edit">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+
+                padding: 10px;
+            }
+        </style>
+
+        <div class="card">
+            <div class="circle">N</div>
+            <h1>Neues Buch anlegen</h1>
+            <form>
+                <paper-input
+            </form>
+            <dom-bind>
+            </dom-bind>
+        </div>
+    </template>
+    <script>
+        class BookEdit extends Polymer.Element {
+            static get is() {
+                return 'book-edit';
+            }
+
+            static get properties() {
+                return {
+                    books: {
+                        type: Array,
+                        notify: true
+                    },
+                    searchTerm: {
+                        type: String,
+                        value: ''
+                    },
+                    sortProperty: {
+                        type: String,
+                        notify: true
+                    },
+                    page: {
+                        type: String,
+                        observer: "_pageChanged"
+                    }
+                };
+            }
+        }
+        window.customElements.define(BookEdit.is, BookEdit);
+    </script>
+</dom-module>
