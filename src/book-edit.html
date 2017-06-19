@@ -1,5 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="shared-styles.html">
 <dom-module id="book-edit">
     <template>
@@ -14,10 +18,31 @@
         <div class="card">
             <div class="circle">N</div>
             <h1>Neues Buch anlegen</h1>
-            <form>
-                <paper-input
-            </form>
             <dom-bind>
+                <iron-ajax id="storeBook"
+                           method="POST"
+                           headers='{"Content-Type": "application/json","Accept": "*/*"}'
+                           url="http://localhost:8080/de.oc.bookmonkey.rest.app/api/books"
+                           handle-as="json"
+                           on-response="handleResponse">
+                </iron-ajax>
+                <form>
+                    <paper-input  label="Titel" value="{{title}}"></paper-input>
+                    <paper-input name="{{subtitle}}" label="Untertitel" value="{{subtitle}}"></paper-input>
+
+                    <paper-input name="isbn" label="ISBN" value="{{isbn}}"></paper-input>
+                    <paper-textarea name="abstract" label="Kurzbeschreibung" value="{{abstract}}"></paper-textarea>
+                    <paper-input name="numPages" label="Seiten" value="{{numPages}}" auto-validate
+                                 pattern="[0-9]*" error-message="numbers only !"></paper-input>
+                    <paper-input name="author" label="Autor" value="{{author}}"></paper-input>
+                    <paper-input name="publisher.name" label="Verlag" value="{{publisher.name}}"></paper-input>
+                    <paper-input name="publisher.url" label="Webseites des Verlages"
+                                 value="{{publisher.url}}"></paper-input>
+                    <paper-button raised on-tap="handleBookCreate">
+                        <iron-icon icon="add"></iron-icon>
+                        Add
+                    </paper-button>
+                </form>
             </dom-bind>
         </div>
     </template>
@@ -29,23 +54,78 @@
 
             static get properties() {
                 return {
-                    books: {
-                        type: Array,
-                        notify: true
+                    title: {
+                        type: String
                     },
-                    searchTerm: {
-                        type: String,
-                        value: ''
+                    subtitle: {
+                        type: String
                     },
-                    sortProperty: {
-                        type: String,
-                        notify: true
+                    isbn: {
+                        type: String
                     },
-                    page: {
-                        type: String,
-                        observer: "_pageChanged"
+                    abstract: {
+                        type: String
+
+                    },
+                    numPages: {
+                        type: String
+
+                    },
+                    author: {
+                        type: String
+
+                    },
+                    publisher: {
+                        type: Object,
+                        value: function () {
+                            return {};
+                        },
+                        name: {
+                            type: String
+
+                        },
+                        url: {
+                            type: String
+
+                        }
                     }
                 };
+            }
+
+            handleBookCreate() {
+                console.log(this.get('title'));
+                console.log(this.get('publisher.name'));
+
+                this.$.storeBook.body = {
+                    "title": this.get('title'),
+                    "subtitle": this.get('subtitle'),
+                    "isbn": this.get('isbn'),
+                    "numPages": this.get('numPages'),
+                    "author": this.get('author'),
+                    "abstract": this.get('abstract'),
+                    "publisher": {
+                        "name": this.get('publisher.name'),
+                        "url": this.get('publisher.url')
+                    }
+                };
+
+                console.log(this.$.storeBook.body);
+                this.$.storeBook.body = JSON.stringify(this.$.storeBook.body);
+                console.log(this.$.storeBook.body);
+                this.$.storeBook.generateRequest();
+            }
+
+            handleResponse(event) {
+                console.log(event);
+                console.log(event.returnValue);
+                this.set('title', '');
+                this.set('subtitle', '');
+                this.set('isbn', '');
+                this.set('numPages', '');
+                this.set('author', '');
+                this.set('abstract', '');
+                this.set('publisher.name', '');
+                this.set('publisher.url', '');
             }
         }
         window.customElements.define(BookEdit.is, BookEdit);

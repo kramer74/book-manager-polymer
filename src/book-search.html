@@ -23,15 +23,12 @@
                 <iron-ajax
                         auto
                         id="requestBooks"
-                        url="http://localhost:9080/de.oc.bookmonkey.rest.app/api/books"
+                        url="http://localhost:8080/de.oc.bookmonkey.rest.app/api/books"
                         params='{"type":"all"}'
                         handle-as="json"
                         last-response="{{books}}">
                 </iron-ajax>
-                <paper-datatable-api id="dataTable" data="[[books]]"
-                                     paginate
-                                     totalElements="30"
-                                     totalPages="5">
+                <paper-datatable-api id="dataTable" data="[[books]]">
                     <paper-datatable-api-column draggable-column header="Titel" property="title" sortable sortDirection="asc">
                         <template>
                             <span>[[value]]</span>
