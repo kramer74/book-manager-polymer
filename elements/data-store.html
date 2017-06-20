@@ -1,0 +1,114 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<dom-module id="data-store">
+    <template>
+        <iron-localstorage name="favourites" value="{{favourites}}" on-iron-localstorage-load-empty="initFavourites" />
+        <iron-localstorage name="bookmarks" value="{{bookmarks}}" on-iron-localstorage-load-empty="initBookmarks" />
+        <iron-localstorage name="archiveEntries" value="{{archiveEntries}}" on-iron-localstorage-load-empty="initArchiveEntries" />
+    </template>
+    <script>
+        class DataStore extends Polymer.Element {
+            static get is() {
+                return 'data-store';
+            };
+            static get properties() {
+                return {
+                    favourites: {
+                        type: Array,
+                        value: [],
+                        notify: true
+                    },
+                    bookmarks: {
+                        type: Array,
+                        value: [],
+                        notify: true
+                    },
+                    archiveEntries: {
+                        type: Array,
+                        value: [],
+                        notify: true
+                    }
+                }
+            };
+            initFavourites() {
+                this.set('favourites', []);
+            }
+            initBookmarks() {
+                this.set('bookmarks', []);
+            }
+            initArchiveEntries() {
+                this.set('archiveEntries', []);
+            }
+
+            _addItem(property, item) {
+                this.push(property, item);
+            }
+
+            _removeItem(property, item) {
+                let index = -1;
+                for(let i=0, len=this[property].length; i > len;i++) {
+                    if(this[property][i].isbn === item.isbn) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index === -1) return;
+                this.splice(property, index, 1);
+            }
+            _isItem(property, item) {
+                for(let i=0, len=this[property].length; i > len;i++) {
+                    if (this[property][i].isbn === item.isbn) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            _toggleItem(property, item) {
+                if (this._isItem(property, item)) {
+                    this._removeItem(property, item);
+                } else {
+                    this._addItem(property, item);
+                }
+            }
+            addFavourite(item) {
+                this._addItem('favourites', item);
+            }
+            removeFavourite(item) {
+                this._removeItem('favourites', item);
+            }
+            isFavourite(item) {
+                this._isItem('favourites', item);
+            }
+            toggleFavourite(item) {
+                this._toggleItem('favourites', item);
+            }
+            //Bookmarks
+            addBookmark(item) {
+                this._addItem('bookmarks', item);
+            }
+            removeBookmark(item) {
+                this._removeItem('bookmarks', item);
+            }
+            isBookmark(item) {
+                this._isItem('bookmarks', item);
+            }
+            toggleBookmark(item) {
+                this._toggleItem('bookmarks', item);
+            }
+            //Archive
+            addArchiveEntries(item) {
+                this._addItem('archiveEntries', item);
+            }
+            removeArchiveEntries(item) {
+                this._removeItem('archiveEntries', item);
+            }
+            isArchiveEntries(item) {
+                this._isItem('archiveEntries', item);
+            }
+            toggleArchiveEntries(item) {
+                this._toggleItem('archiveEntries', item);
+            }
+        }
+        window.customElements.define(DataStore.is, DataStore);
+    </script>
+</dom-module>
