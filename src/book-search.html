@@ -2,6 +2,9 @@
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../bower_components/paper-datatable-api/paper-datatable-api-column.html">
 <link rel="import" href="../bower_components/paper-datatable-api/paper-datatable-api.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../elements/data-store.html">
+<link rel="import" href="../elements/book-tile.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="book-search">
@@ -18,29 +21,47 @@
             <div class="circle">S</div>
             <h1>Suche</h1>
             <input value="{{searchTerm::input}}">
-            <p>[[page]]</p>
-            <dom-bind>
-                <iron-ajax
-                        auto
-                        id="requestBooks"
-                        url="http://localhost:9080/de.oc.bookmonkey.rest.app/api/books"
-                        params='{"type":"all"}'
-                        handle-as="json"
-                        last-response="{{books}}">
-                </iron-ajax>
-                <paper-datatable-api id="dataTable" data="[[books]]">
-                    <paper-datatable-api-column draggable-column header="Titel" property="title" sortable sortDirection="asc">
-                        <template>
-                            <span>[[value]]</span>
-                        </template>
-                    </paper-datatable-api-column>
-                    <paper-datatable-api-column header="Subtitle" property="subtitle">
-                        <template>
-                            <span>[[value]]</span>
-                        </template>
-                    </paper-datatable-api-column>
-                </paper-datatable-api>
-            </dom-bind>
+            <iron-ajax
+                    auto
+                    id="requestBooks"
+                    url="http://localhost:8080/de.oc.bookmonkey.rest.app/api/books"
+                    params='{"type":"all"}'
+                    loading="{{loading}}"
+                    handle-as="json"
+                    last-response="{{books}}">
+            </iron-ajax>
+            <data-store id="store"></data-store>
+           <!--
+            <paper-datatable-api id="dataTable" data="[[books]]">
+                <paper-datatable-api-column draggable-column header="Titel" property="title" sortable sortDirection="asc">
+                    <template>
+                        <span>[[value]]</span>
+                    </template>
+                </paper-datatable-api-column>
+                <paper-datatable-api-column header="Subtitle" property="subtitle">
+                    <template>
+                        <span>[[value]]</span>
+                    </template>
+                </paper-datatable-api-column>
+            </paper-datatable-api>
+            -->
+            <template is="dom-if" if="[[hasFinishedWithResults(loading, books)]]">
+                <p>Suche nach Büchern ergab <strong>[[books.length]]</strong> Treffer:</p>
+            </template>
+            <template is="dom-if" if="[[loading]]">
+                <p>Suche nach Büchern läuft...</p>
+            </template>
+            <ul>
+                <template is="dom-repeat" items="[[books]]">
+                    <li style="display: block; margin-bottom: 1em;">
+                        <book-tile isbn="[[item.isbn]]">
+                            on-is-favourite-changed="toggleFavourite"
+                            on-is-bookmark-changed="toggleBookmark"
+                            on-is-favourite-changed="toggleFavourite"
+                        </book-tile>
+                    </li>
+                </template>
+            </ul>
         </div>
     </template>
     <script>
@@ -63,8 +84,10 @@
                     },
                     page: {
                         type: String,
+                        notify: true,
                         observer: "_pageChanged"
-                    }
+                    },
+                    loading: Boolean
                 };
             }
 
@@ -87,19 +110,33 @@
             connectedCallback() {
                 super.connectedCallback();
                 this.addEventListener('sort-th-content', this.handleSort.bind(this));
+                this.addEventListener('details-requested', this.showDetails.bind(this));
             }
 
+            hasFinishedWithResults(loading, result) {
+                return !loading && result && result.length > 0;
+            }
             handleSort(event) {
                 console.log("Owwh", event);
                 this.sortProperty = event.detail.column.property + ',' + event.detail.column.sortDirection ; ;
                 console.log(this.sortProperty);
             }
-
             _pageChanged(page) {
                 console.log("page", page);
                 if ('search' === page) {
                     this.$.requestBooks.generateRequest();
                 }
+            }
+            showDetails(event) {
+                console.log("Wow!", event);
+
+            }
+            toggleBookmark(event) {
+                console.log(event);
+                if (event.model.item) {
+                    return;
+                }
+                this.$.store.toggleBookmark(event.target.book);
             }
         }
         window.customElements.define(BookSearch.is, BookSearch);

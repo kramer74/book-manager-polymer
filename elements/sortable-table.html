@@ -19,10 +19,10 @@
                     <template is="dom-repeat" items="[[columns]]" as="column">
                         <th on-tap="setSorting">
                             <template is="dom-if" if="[[isSortingBy(column.bookProperty, 1, sortingBy, sortingOrder)}}">
-                                <iron-icon icon="arrow-drop-up"/>
+                                <iron-icon icon="arrow-drop-up"></iron-icon>
                             </template>
                             <template is="dom-if" if="[[isSortingBy(column.bookProperty,-1, sortingBy, sortingOrder)}}">
-                                <iron-icon icon="arrow-drop-down"/>
+                                <iron-icon icon="arrow-drop-down"></iron-icon>
                             </template>
                             <span>[[column.label]]</span>
                         </th>
@@ -37,8 +37,8 @@
                         <td>[[item.subtitle]]</td>
                         <td>[[item.title]]</td>
                         <td>[[item.title]]</td>
-                        <td><star-rating value="" stars="5"/></td>
-                        <td><paper-icon-button on-tap="removeFormArchive" icon="clear" title="Aus der Liste entfernen"/></td>
+                        <td><star-rating value="" stars="5"></star-rating></td>
+                        <td><paper-icon-button on-tap="removeFormArchive" icon="clear" title="Aus der Liste entfernen"></paper-icon-button></td>
                     </tr>
                 </template>
             </tbody>

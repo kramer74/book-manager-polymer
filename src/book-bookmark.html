@@ -1,4 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../elements/data-store.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="book-bookmark">
@@ -14,14 +17,28 @@
         <div class="card">
             <div class="circle">M</div>
             <h1>Merkliste</h1>
-            <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-            <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
+            <data-store id="store" bookmarks="{{entries}}"></data-store>
+            <paper-listbox>
+                <template is="dom-repeat" items="[[entries]]">
+                    <paper-item>
+                        <div class="title">[[item.title]]</div>
+                        <paper-icon-button icon="clear" title="Aus der Liste entfernen" on-tap="removeBookmark"></paper-icon-button>
+                    </paper-item>
+                </template>
+            </paper-listbox>
         </div>
     </template>
 
     <script>
         class BookBookmark extends Polymer.Element {
             static get is() { return 'book-bookmark'; }
+
+            static get properties() {
+                entries: Array
+            }
+            removeBookmark(event) {
+                this.$.store.removeBookmark(event.model.item);
+            }
         }
 
         window.customElements.define(BookBookmark.is, BookBookmark);

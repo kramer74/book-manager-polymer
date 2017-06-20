@@ -1,0 +1,41 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="book-details">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+
+                padding: 10px;
+            }
+        </style>
+
+        <div class="card">
+            <div class="circle">D</div>
+            <h1>Details</h1>
+            <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
+            <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+        </div>
+    </template>
+
+    <script>
+        class BookDetails extends Polymer.Element {
+            static get is() { return 'book-details'; }
+            static get properties() {
+                return {
+                    id: {
+                        type: Object,
+                        value: function() { return {}; },
+                        observer: "_idChanged"
+                    }
+                }
+            }
+            _idChanged(isbn) {
+                console.log("isbn", isbn);
+            }
+        }
+
+        window.customElements.define(BookDetails.is, BookDetails);
+    </script>
+</dom-module>

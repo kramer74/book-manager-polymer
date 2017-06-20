@@ -6,21 +6,55 @@
 <link rel="import" href="../bower_components/star-rating/star-rating.html">
 <dom-module id="book-tile">
     <template>
+
         <style is="custom-style">
             paper-card.book {
+                @apply(--layout-horizontal);
+                max-width: 95%;
+            }
+            .book-content {margin-right: 110px;}
+            .card-actions { height: 2em;}
+            .book-header { @apply(--paper-font-headline);}
+            .book-content {
+                color: var(--paper-grey-600);
+                margin-bottom: 10px;
+            }
+            #favourite[active] {color: var(--paper-red-900); }
+            #bookmark[active] {color: var(--paper-blue-600); }
+            #archive[active] {color: var(--paper-green-300); }
 
+            a:link {
+                text-decoration: none;
+                color:#000000;
+            }
+
+            a:visited {
+                text-decoration: none;
+                color:#000000;
+            }
+
+            a:hover {
+                text-decoration: none;
+                color:#000000;
+            }
+
+            a:active {
+                text-decoration: none;
+                color:#000000;
             }
         </style>
         <paper-card class="book">
-            <iron-ajax url="http://localhost:9080/de.oc.bookmonkey.rest.app/api/books/[[isbn]]" handle-as="json" last-response="{{book}}" auto/>
+            <iron-ajax url="http://localhost:8080/de.oc.bookmonkey.rest.app/api/books/[[isbn]]" handle-as="json" last-response="{{book}}" auto></iron-ajax>
             <div class="book-content">
+                <a href="details/[[isbn]]">
                 <div class="card-content" on-tap="requestDetails">
                     <div class="book-header">[[book.title]]</div>
                     <div class="book-info">[[book.subtitle]]</div>
-                    <star-rating count="5" value="[[rating]]" />
+                    <star-rating stars="5" rate="[[rating]]" ></star-rating>
                 </div>
+                </a>
                 <div class="card-actions">
-                    <paper-icon-button id="favourite" icon="favorite" active="{{isFavourite}}" toggles></paper-icon-button>
+                    <paper-icon-button id="favourite" icon="favorite" active="{{isFavourite}}"  toggles></paper-icon-button>
                     <paper-icon-button id="bookmark" icon="bookmark" active="{{isBookmarked}}" toggles></paper-icon-button>
                     <paper-icon-button id="archive" icon="check" active="{{isArchived}}" toggles></paper-icon-button>
                 </div>
@@ -35,7 +69,9 @@
 
             static get properties() {
                 return {
-                    isbn: String,
+                    isbn: {
+                        type: String,
+                    },
                     isFavourite: {
                         type: Boolean,
                         notify: true
@@ -63,8 +99,10 @@
                 return 4;
             }
             requestDetails() {
-                this.dispatchEvent(new CustomEvent('details-requested', {detail: {book: this.book}}));
+                console.log('dispatchEvent');
+                this.dispatchEvent(new CustomEvent('details-requested', {bubbles: true, composed: true, detail: {book: this.book} }));
             }
+
         }
         window.customElements.define(BookTile.is, BookTile);
     </script>

@@ -17,6 +17,7 @@
 <link rel="lazy-import" href="book-bookmark.html">
 <link rel="lazy-import" href="book-archive.html">
 <link rel="lazy-import" href="book-edit.html">
+<link rel="lazy-import" href="book-details.html">
 <link rel="lazy-import" href="book-view404.html">
 
 <dom-module id="book-app">
@@ -73,7 +74,11 @@
                 data="{{routeData}}"
                 tail="{{subroute}}">
         </app-route>
-
+        <app-route
+                route="{{subroute}}"
+                pattern="/:id"
+                data="{{subrouteData}}">
+        </app-route>
         <app-header-layout>
             <app-header fixed effects="waterfall" slot="header">
                 <app-toolbar>
@@ -121,6 +126,7 @@
                     <book-bookmark name="bookmark"></book-bookmark>
                     <book-archive name="archive"></book-archive>
                     <book-view404 name="view404"></book-view404>
+                    <book-details name="details" id="[[subrouteData]]"></book-details>
                 </iron-pages>
             </app-drawer-layout>
 
@@ -142,7 +148,8 @@
                     },
                     rootPattern: String,
                     routeData: Object,
-                    subroute: String
+                    subroute: String,
+                    subrouteData: Object
                 };
             }
 
