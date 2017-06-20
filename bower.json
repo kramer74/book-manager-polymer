@@ -27,6 +27,7 @@
     "paper-datatable-api": "^2.0.1",
     "paper-input": "^2.0.1",
     "paper-button": "^2.0.0",
-    "Sortable": "sortable.js#^1.6.0"
+    "paper-card": "PolymerElements/paper-card#^2.0.0",
+    "polymer-sortablejs": "^0.1.3"
   }
 }

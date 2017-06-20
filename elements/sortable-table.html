@@ -1,0 +1,107 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/star-rating/star-rating.html">
+<dom-module id="sortable-table">
+    <template>
+        <style>
+            thead {
+                background-color: var(--paper-grey-200);
+            }
+            th,td {
+                text-align: left;
+                padding-right: 2em;
+            }
+        </style>
+        <table>
+            <thead>
+                <tr>
+                    <template is="dom-repeat" items="[[columns]]" as="column">
+                        <th on-tap="setSorting">
+                            <template is="dom-if" if="[[isSortingBy(column.bookProperty, 1, sortingBy, sortingOrder)}}">
+                                <iron-icon icon="arrow-drop-up"/>
+                            </template>
+                            <template is="dom-if" if="[[isSortingBy(column.bookProperty,-1, sortingBy, sortingOrder)}}">
+                                <iron-icon icon="arrow-drop-down"/>
+                            </template>
+                            <span>[[column.label]]</span>
+                        </th>
+                    </template>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <template is="dom-repeat" items="[[entries]]" sort="[[getSortFunc(sortingBy, sortingOrder)]]">
+                    <tr>
+                        <td>[[item.title]]</td>
+                        <td>[[item.subtitle]]</td>
+                        <td>[[item.title]]</td>
+                        <td>[[item.title]]</td>
+                        <td><star-rating value="" stars="5"/></td>
+                        <td><paper-icon-button on-tap="removeFormArchive" icon="clear" title="Aus der Liste entfernen"/></td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </template>
+    <script>
+        class SortableTable extends Polymer.Element {
+            static get is() {
+                return 'sortable-table';
+            };
+
+            static get properties() {
+                return {
+                    entries: Array,
+                    sortingBy: {
+                        type: String,
+                        value: 'title',
+                    },
+                    sortingOrder: {
+                        type: Number,
+                        value: 1
+                    },
+                    columns: {
+                        type: Array,
+                        readOnly: true,
+                        value: [
+                            {label: 'Titel', bookProperty: 'title'},
+                            {label: 'Titel', bookProperty: 'title'},
+                            {label: 'Titel', bookProperty: 'title'},
+                            {label: 'Titel', bookProperty: 'title'},
+                            {label: 'Bewertung', bookProperty: 'bookRating'},
+                        ]
+                    }
+                }
+            }
+            isSortingBy(columnName, order, sortingBy, sortingOrder) {
+                return columnName === sortingBy && sortingOrder === order;
+            }
+            setSorting(event) {
+                let column = event.model.column;
+                if (this.sortingBy === column.bookProperty) {
+                    this.sortingOrder *= -1;
+                } else {
+                    this.sortingBy = column.bookProperty;
+                    this.sortingOrder = 1;
+                }
+            }
+            getSortFunc(sortBy, order) {
+                return function(a,b) {
+                    if (order === 1) {
+                        return a[sortBy] > b[sortBy];
+                    } else {
+                        return a[sortBy] < b[sortBy];
+                    }
+                }
+            }
+            getRating(originalRating) {
+                return 4;
+            }
+            removeFromArchive(event) {
+                this.dispatchEvent(new CustomEvent('remove-archive-entry', {detail: {item: event.model.item}}));
+            }
+        }
+        window.customElements.define(SortableTable.is, SortableTable);
+    </script>
+</dom-module>

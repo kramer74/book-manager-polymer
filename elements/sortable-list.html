@@ -1,0 +1,44 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/polymer-sortablejs/polymer-sortablejs.html">
+<dom-module id="sortable-list">
+    <template strip-whitspace>
+        <paper-listbox>
+            <sortable-js id="list" on-sort="updateEntries" on-start="yell">
+                <template is="dom-repeat" items="[[entries]]">
+                    <paper-item>[[item.title]]</paper-item>
+                </template>
+            </sortable-js>
+        </paper-listbox>
+    </template>
+    <script>
+        class SortableList extends Polymer.Element {
+            static get is() {
+                return 'sortable-list';
+            };
+
+            static get properties() {
+                return {
+                    entries: {
+                        type: Array,
+                        notify: true
+                    }
+                }
+            }
+            yell() {
+                console.log('started');
+            }
+            updateEntries(event) {
+                console.log('x', event.oldIndex, event.newIndex);
+                if (event.oldIndex === undefined) {
+                    return;
+                }
+                console.log('y');
+                let tmp = this.entries[event.oldIndex];
+                this.splice('entries', event.oldIndex, 1, tmp);
+            }
+        }
+        window.customElements.define(SortableList.is, SortableList);
+    </script>
+</dom-module>

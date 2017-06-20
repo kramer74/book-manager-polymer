@@ -1,0 +1,71 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/star-rating/star-rating.html">
+<dom-module id="book-tile">
+    <template>
+        <style is="custom-style">
+            paper-card.book {
+
+            }
+        </style>
+        <paper-card class="book">
+            <iron-ajax url="http://localhost:9080/de.oc.bookmonkey.rest.app/api/books/[[isbn]]" handle-as="json" last-response="{{book}}" auto/>
+            <div class="book-content">
+                <div class="card-content" on-tap="requestDetails">
+                    <div class="book-header">[[book.title]]</div>
+                    <div class="book-info">[[book.subtitle]]</div>
+                    <star-rating count="5" value="[[rating]]" />
+                </div>
+                <div class="card-actions">
+                    <paper-icon-button id="favourite" icon="favorite" active="{{isFavourite}}" toggles></paper-icon-button>
+                    <paper-icon-button id="bookmark" icon="bookmark" active="{{isBookmarked}}" toggles></paper-icon-button>
+                    <paper-icon-button id="archive" icon="check" active="{{isArchived}}" toggles></paper-icon-button>
+                </div>
+            </div>
+        </paper-card>
+    </template>
+    <script>
+        class BookTile extends Polymer.Element {
+            static get is() {
+                return 'book-tile';
+            };
+
+            static get properties() {
+                return {
+                    isbn: String,
+                    isFavourite: {
+                        type: Boolean,
+                        notify: true
+                    },
+                    isBookmarked: {
+                        type: Boolean,
+                        notify: true
+                    },
+                    isArchived: {
+                        type: Boolean,
+                        notify: true
+                    },
+                    book: {
+                        type: Object,
+                        value: function() { return {}; },
+                        notify: true
+                    },
+                    rating: {
+                        type: Number,
+                        computed: 'getRating(book)'
+                    }
+                };
+            }
+            getRating(book) {
+                return 4;
+            }
+            requestDetails() {
+                this.dispatchEvent(new CustomEvent('details-requested', {detail: {book: this.book}}));
+            }
+        }
+        window.customElements.define(BookTile.is, BookTile);
+    </script>
+</dom-module>
