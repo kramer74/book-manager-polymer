@@ -12,10 +12,10 @@
                 @apply(--layout-horizontal);
                 max-width: 95%;
             }
-            .book-content {margin-right: 110px;}
+            .book-content {margin: 20px;}
             .card-actions { height: 2em;}
             .book-header { @apply(--paper-font-headline);}
-            .book-content {
+            .book-info {
                 color: var(--paper-grey-600);
                 margin-bottom: 10px;
             }
@@ -23,28 +23,13 @@
             #bookmark[active] {color: var(--paper-blue-600); }
             #archive[active] {color: var(--paper-green-300); }
 
-            a:link {
+            a:link, a:visited, a:hover, a:active {
                 text-decoration: none;
-                color:#000000;
-            }
-
-            a:visited {
-                text-decoration: none;
-                color:#000000;
-            }
-
-            a:hover {
-                text-decoration: none;
-                color:#000000;
-            }
-
-            a:active {
-                text-decoration: none;
-                color:#000000;
+                color: var(--paper-grey-600);
             }
         </style>
         <paper-card class="book">
-            <iron-ajax url="http://localhost:8080/de.oc.bookmonkey.rest.app/api/books/[[isbn]]" handle-as="json" last-response="{{book}}" auto></iron-ajax>
+            <iron-ajax url="http://localhost:9080/de.oc.bookmonkey.rest.app/api/books/[[isbn]]" handle-as="json" last-response="{{book}}" auto></iron-ajax>
             <div class="book-content">
                 <a href="details/[[isbn]]">
                 <div class="card-content" on-tap="requestDetails">
@@ -98,9 +83,14 @@
             getRating(book) {
                 return 4;
             }
+
             requestDetails() {
                 console.log('dispatchEvent');
                 this.dispatchEvent(new CustomEvent('details-requested', {bubbles: true, composed: true, detail: {book: this.book} }));
+            }
+
+            bookmarkChanged() {
+                this.dispatchEvent(new CustomEvent('is-bookmark-changed', {bubbles: true, composed: true, detail: {book: this.book} }));
             }
 
         }

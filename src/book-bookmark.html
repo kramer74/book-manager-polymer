@@ -34,9 +34,14 @@
             static get is() { return 'book-bookmark'; }
 
             static get properties() {
-                entries: Array
+                return {
+                    entries: {
+                        type: Array
+                    }
+                }
             }
             removeBookmark(event) {
+                console.log(event.model.item);
                 this.$.store.removeBookmark(event.model.item);
             }
         }

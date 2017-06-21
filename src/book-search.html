@@ -24,7 +24,7 @@
             <iron-ajax
                     auto
                     id="requestBooks"
-                    url="http://localhost:8080/de.oc.bookmonkey.rest.app/api/books"
+                    url="http://localhost:9080/de.oc.bookmonkey.rest.app/api/books"
                     params='{"type":"all"}'
                     loading="{{loading}}"
                     handle-as="json"
@@ -54,10 +54,13 @@
             <ul>
                 <template is="dom-repeat" items="[[books]]">
                     <li style="display: block; margin-bottom: 1em;">
-                        <book-tile isbn="[[item.isbn]]">
+                        <book-tile isbn="[[item.isbn]]"
                             on-is-favourite-changed="toggleFavourite"
-                            on-is-bookmark-changed="toggleBookmark"
-                            on-is-favourite-changed="toggleFavourite"
+                            on-is-bookmarked-changed="toggleBookmark"
+                            on-is-archived-changed="toggleArchived"
+                            is-favourite="[[isResultInList('favourites', item)]]"
+                            is-bookmarked="[[isResultInList('bookmarks', item)]]"
+                            is-archived="[[isResultInList('archiveEntries', item)]]">
                         </book-tile>
                     </li>
                 </template>
@@ -131,12 +134,32 @@
                 console.log("Wow!", event);
 
             }
+            isResultInList(list, item) {
+                if(!item) {
+                    return false;
+                } else {
+                    return this.$.store._isItem(list, item);
+                }
+            }
             toggleBookmark(event) {
-                console.log(event);
-                if (event.model.item) {
+                console.log('toggleBookmark(event)',event);
+                if (!event.model.item) {
                     return;
                 }
-                this.$.store.toggleBookmark(event.target.book);
+                this.$.store.toggleBookmark(event.model.item);
+            }
+            toggleFavourite(event) {
+                console.log('toggleFavourite(event)',event);
+                if (!event.model.item) {
+                    return;
+                }
+                this.$.store.toggleFavourite(event.model.item);
+            }
+            toggleArchived(event) {
+                if (!event.model.item) {
+                   return;
+                }
+                this.$.store.toggleArchiveEntry(event.model.item);
             }
         }
         window.customElements.define(BookSearch.is, BookSearch);

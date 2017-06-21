@@ -1,4 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-datatable-api/paper-datatable-api-column.html">
+<link rel="import" href="../bower_components/paper-datatable-api/paper-datatable-api.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="book-archive">
@@ -9,19 +11,46 @@
 
                 padding: 10px;
             }
+            paper-datatable-api {
+                --paper-datatable-api-tr-selected-background: var(--paper-grey-100);
+                --paper-datatable-api-checked-checkbox-color: #000;
+            }
         </style>
 
         <div class="card">
             <div class="circle">A</div>
             <h1>Archiv</h1>
-            <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
-            <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+            <data-store id="store" archive-entries="{{entries}}"></data-store>
+            <paper-datatable-api id="dataTable" data="[[entries]]" selectable>
+                <paper-datatable-api-column draggable-column header="Titel" property="title" >
+                    <template>
+                        <span>[[value]]</span>
+                    </template>
+                </paper-datatable-api-column>
+                <paper-datatable-api-column header="Subtitle" property="subtitle">
+                    <template>
+                        <span>[[value]]</span>
+                    </template>
+                </paper-datatable-api-column>
+                <paper-datatable-api-column header="Autor" property="author">
+                    <template>
+                        <span>[[value]]</span>
+                    </template>
+                </paper-datatable-api-column>
+            </paper-datatable-api>
         </div>
     </template>
 
     <script>
         class BookArchive extends Polymer.Element {
             static get is() { return 'book-archive'; }
+            static get properties() {
+                return {
+                    entries: {
+                        type: Array
+                    }
+                }
+            }
         }
 
         window.customElements.define(BookArchive.is, BookArchive);

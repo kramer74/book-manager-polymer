@@ -1,4 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../elements/data-store.html">
+<link rel="import" href="../bower_components/paper-datatable-api/paper-datatable-api-column.html">
+<link rel="import" href="../bower_components/paper-datatable-api/paper-datatable-api.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="book-favorite">
@@ -14,14 +17,37 @@
         <div class="card">
             <div class="circle">F</div>
             <h1>Favoriten</h1>
-            <p>Ea duis bonorum nec, falli paulo aliquid ei eum.</p>
-            <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
+            <data-store id="store" favourites="{{entries}}"></data-store>
+            <paper-datatable-api id="dataTable" data="[[entries]]">
+                <paper-datatable-api-column draggable-column header="Titel" property="title" sortable sortDirection="asc">
+                    <template>
+                        <span>[[value]]</span>
+                    </template>
+                </paper-datatable-api-column>
+                <paper-datatable-api-column header="Subtitle" property="subtitle">
+                    <template>
+                        <span>[[value]]</span>
+                    </template>
+                </paper-datatable-api-column>
+                <paper-datatable-api-column header="Autor" property="author">
+                    <template>
+                        <span>[[value]]</span>
+                    </template>
+                </paper-datatable-api-column>
+            </paper-datatable-api>
         </div>
     </template>
 
     <script>
         class BookFavorite extends Polymer.Element {
             static get is() { return 'book-favorite'; }
+            static get properties() {
+                return {
+                    entries: {
+                        type: Array
+                    }
+                }
+            }
         }
 
         window.customElements.define(BookFavorite.is, BookFavorite);

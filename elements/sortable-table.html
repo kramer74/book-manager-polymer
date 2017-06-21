@@ -35,8 +35,7 @@
                     <tr>
                         <td>[[item.title]]</td>
                         <td>[[item.subtitle]]</td>
-                        <td>[[item.title]]</td>
-                        <td>[[item.title]]</td>
+                        <td>[[item.author]]</td>
                         <td><star-rating value="" stars="5"></star-rating></td>
                         <td><paper-icon-button on-tap="removeFormArchive" icon="clear" title="Aus der Liste entfernen"></paper-icon-button></td>
                     </tr>
@@ -66,9 +65,8 @@
                         readOnly: true,
                         value: [
                             {label: 'Titel', bookProperty: 'title'},
-                            {label: 'Titel', bookProperty: 'title'},
-                            {label: 'Titel', bookProperty: 'title'},
-                            {label: 'Titel', bookProperty: 'title'},
+                            {label: 'Untertitel', bookProperty: 'subtile'},
+                            {label: 'Autor', bookProperty: 'author'},
                             {label: 'Bewertung', bookProperty: 'bookRating'},
                         ]
                     }

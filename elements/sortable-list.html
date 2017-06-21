@@ -3,14 +3,17 @@
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/polymer-sortablejs/polymer-sortablejs.html">
 <dom-module id="sortable-list">
-    <template strip-whitspace>
+    <template>
         <paper-listbox>
             <sortable-js id="list" on-sort="updateEntries" on-start="yell">
                 <template is="dom-repeat" items="[[entries]]">
                     <paper-item>[[item.title]]</paper-item>
+                    <paper-item>[[item.subtitle]]</paper-item>
+                    <paper-item>[[item.author]]</paper-item>
                 </template>
             </sortable-js>
         </paper-listbox>
+        <p>polymer-sortablejs</p>
     </template>
     <script>
         class SortableList extends Polymer.Element {

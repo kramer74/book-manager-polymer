@@ -2,9 +2,9 @@
 <link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
 <dom-module id="data-store">
     <template>
-        <iron-localstorage name="favourites" value="{{favourites}}" on-iron-localstorage-load-empty="initFavourites" />
-        <iron-localstorage name="bookmarks" value="{{bookmarks}}" on-iron-localstorage-load-empty="initBookmarks" />
-        <iron-localstorage name="archiveEntries" value="{{archiveEntries}}" on-iron-localstorage-load-empty="initArchiveEntries" />
+        <iron-localstorage name="favourites" value="{{favourites}}" on-iron-localstorage-load-empty="initFavourites" ></iron-localstorage>
+        <iron-localstorage name="bookmarks" value="{{bookmarks}}" on-iron-localstorage-load-empty="initBookmarks" ></iron-localstorage>
+        <iron-localstorage name="archiveEntries" value="{{archiveEntries}}" on-iron-localstorage-load-empty="initArchiveEntries" ></iron-localstorage>
     </template>
     <script>
         class DataStore extends Polymer.Element {
@@ -45,10 +45,12 @@
             }
 
             _removeItem(property, item) {
+                console.log('_removeItem' + ' ' + this.get(property).length);
                 let index = -1;
-                for(let i=0, len=this[property].length; i > len;i++) {
-                    if(this[property][i].isbn === item.isbn) {
+                for(var i = 0;i < this.get(property).length;i++) {
+                    if(this.get(property)[i].isbn === item.isbn) {
                         index = i;
+                        console.log(i);
                         break;
                     }
                 }
@@ -56,8 +58,9 @@
                 this.splice(property, index, 1);
             }
             _isItem(property, item) {
-                for(let i=0, len=this[property].length; i > len;i++) {
-                    if (this[property][i].isbn === item.isbn) {
+                for(var i = 0;i < this.get(property).length;i++) {
+                    if (this.get(property)[i].isbn === item.isbn) {
+                        console.log('_isItem: ' ,item.isbn )
                         return true;
                     }
                 }
@@ -96,16 +99,16 @@
                 this._toggleItem('bookmarks', item);
             }
             //Archive
-            addArchiveEntries(item) {
+            addArchiveEntry(item) {
                 this._addItem('archiveEntries', item);
             }
-            removeArchiveEntries(item) {
+            removeArchiveEntry(item) {
                 this._removeItem('archiveEntries', item);
             }
-            isArchiveEntries(item) {
+            isArchiveEntry(item) {
                 this._isItem('archiveEntries', item);
             }
-            toggleArchiveEntries(item) {
+            toggleArchiveEntry(item) {
                 this._toggleItem('archiveEntries', item);
             }
         }
