@@ -39,12 +39,13 @@
     </template>
 
     <script>
-        class BookFavorite extends Polymer.Element {
+        class BookFavorite extends Polymer.MutableData(Polymer.Element) {
             static get is() { return 'book-favorite'; }
             static get properties() {
                 return {
                     entries: {
-                        type: Array
+                        type: Array,
+                        notify: true
                     }
                 }
             }

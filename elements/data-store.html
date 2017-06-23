@@ -1,13 +1,13 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
 <dom-module id="data-store">
     <template>
-        <iron-localstorage name="favourites" value="{{favourites}}" on-iron-localstorage-load-empty="initFavourites" ></iron-localstorage>
-        <iron-localstorage name="bookmarks" value="{{bookmarks}}" on-iron-localstorage-load-empty="initBookmarks" ></iron-localstorage>
-        <iron-localstorage name="archiveEntries" value="{{archiveEntries}}" on-iron-localstorage-load-empty="initArchiveEntries" ></iron-localstorage>
+        <app-localstorage-document key="favourites" data="{{favourites}}"></app-localstorage-document>
+        <app-localstorage-document key="bookmarks" data="{{bookmarks}}"></app-localstorage-document>
+        <app-localstorage-document key="archiveEntries" data="{{archiveEntries}}"></app-localstorage-document>
     </template>
     <script>
-        class DataStore extends Polymer.Element {
+        class DataStore extends Polymer.MutableData(Polymer.Element) {
             static get is() {
                 return 'data-store';
             };
@@ -42,20 +42,21 @@
 
             _addItem(property, item) {
                 this.push(property, item);
+                this.notifyPath(property);
             }
 
             _removeItem(property, item) {
-                console.log('_removeItem' + ' ' + this.get(property).length);
                 let index = -1;
-                for(var i = 0;i < this.get(property).length;i++) {
-                    if(this.get(property)[i].isbn === item.isbn) {
+                for (var i = 0; i < this.get(property).length; i++) {
+                    if (this.get(property)[i].isbn === item.isbn) {
                         index = i;
-                        console.log(i);
+                        console.log('index',i);
                         break;
                     }
                 }
                 if (index === -1) return;
                 this.splice(property, index, 1);
+                this.notifyPath(property);
             }
             _isItem(property, item) {
                 for(var i = 0;i < this.get(property).length;i++) {

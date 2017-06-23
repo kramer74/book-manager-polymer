@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <template id="tpl">
+        <style>
+            h1{
+                font-style: italic;
+                color: darkolivegreen;
+            }
+        </style>
+        <h1></h1>
+    </template>
+    <h1>Alt und langweilig</h1>
+    <script>
+        var tplContent = document.getElementById('tpl').content;
+        var node = document.importNode(tplContent, true);
+        node.querySelector("h1").textContent = "Neu und aufregend";
+
+        var container = document.createElement("div");
+        var shadowContainer = container.createShadowRoot();
+
+        shadowContainer.appendChild(node);
+        document.body.appendChild(container);
+    </script>
+</body>
+</html>

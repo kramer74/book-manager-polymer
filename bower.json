@@ -28,6 +28,7 @@
     "paper-input": "^2.0.1",
     "paper-button": "^2.0.0",
     "paper-card": "PolymerElements/paper-card#^2.0.0",
-    "polymer-sortablejs": "^0.1.3"
+    "polymer-sortablejs": "^0.1.3",
+    "app-storage": "PolymerElements/app-storage#^2.0.2"
   }
 }

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<template>
+    <style>
+        :host {
+            display: inline-block;
+            background: darkkhaki;
+            height: 6em;
+            border-radius: 1em;
+        }
+        h1 {
+            background: white;
+            color: black;
+            border-bottom: 1px solid black;
+            font-weight: bold;
+            margin: 1em 0;
+            height: 1em;
+        }
+    </style>
+    <h1>Hi, I'm <span class="name"></span></h1>
+</template>
+<name-tag></name-tag>
+<script>
+    "use stict"
+    var NameTagProto = Object.create(HTMLDivElement.prototype);
+    NameTagProto.createdCallback = function() {
+        this._root = this.createShadowRoot();
+        var tplContent = document.querySelector('template').content;
+        var node = document.importNode(tplContent, true);
+        this._root.appendChild(node);
+    }
+    NameTagProto.attachedCallback = function () {
+        console.log('name-tag was inserted');
+        this._root.querySelector('.name').textContent = 'the name-tag';
+    }
+    window.NameTag = document.registerElement('name-tag', {prototype: NameTagProto});
+</script>
+</body>
+</html>
